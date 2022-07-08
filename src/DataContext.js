@@ -5,7 +5,27 @@ const DataContext = createContext({});
 
 export const DataProvider = ({ children }) => {
   const [searchList, setSearchList] = useState([]);
-  const [isReady, setIsReady] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState();
+  const [searchDataToFind, setSearchDataToFind] = useState("");
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [dynamicStyles, setDynamicStyles] = useState({
+    height: "90vh",
+    imageWidth: "200px",
+    titleCount: 35,
+    searchBarWidth: 200,
+  });
+  const getWindowWidth = () => {
+    const { innerWidth } = window;
+    return innerWidth;
+  };
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(getWindowWidth());
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -13,12 +33,12 @@ export const DataProvider = ({ children }) => {
           params: {
             part: "snippet",
             maxResults: 5,
-            key: "AIzaSyBEmyEqezo7k_pZj7NqCZNtK0nZTj7FSkg",
-            q: "styxhelix",
+            key: "AIzaSyDo2wnrdqAZ1orU2Bs-4nepgOF179KTe7k",
+            q: `${searchDataToFind}`,
           },
         });
         setSearchList(response.data.items);
-        console.log(searchList);
+        setSelectedVideo(response.data.items[0]);
       } catch (err) {
         if (err.response) {
           console.log(err.response.data);
@@ -30,17 +50,28 @@ export const DataProvider = ({ children }) => {
       }
     };
     fetchData();
-  }, []);
-  const cutText = (text) => {
+  }, [searchDataToFind]);
+  const cutText = (text, count) => {
     let modifiedText = text;
-    if (text.length > 30) {
-      return text.substring(0, 30) + "...";
+    if (text.length > count) {
+      return text.substring(0, count) + "...";
     }
     return modifiedText;
   };
   return (
     <DataContext.Provider
-      value={{ searchList, isReady, setIsReady, setSearchList, cutText }}
+      value={{
+        searchList,
+        selectedVideo,
+        setSelectedVideo,
+        setSearchList,
+        cutText,
+        searchDataToFind,
+        setSearchDataToFind,
+        screenWidth,
+        dynamicStyles,
+        setDynamicStyles,
+      }}
     >
       {children}
     </DataContext.Provider>

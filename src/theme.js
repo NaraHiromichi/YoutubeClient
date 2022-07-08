@@ -7,12 +7,16 @@ export const theme = createTheme({
   //     md: 700,
   //   },
   // },
+
   palette: {
     primary: {
       main: "#FF0000",
     },
     secondary: {
       main: "#282828",
+    },
+    info: {
+      main: "#181818",
     },
   },
 });

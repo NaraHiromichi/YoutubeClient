@@ -9,10 +9,10 @@ const Nav = () => {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    marginLeft: theme.spacing(10),
+    // marginLeft: theme.spacing(10),
   }));
   return (
-    <Box>
+    <Box height="10vh">
       <AppBar color="secondary" sx={{ p: "5px" }} position="static">
         <Toolbar
           sx={{
